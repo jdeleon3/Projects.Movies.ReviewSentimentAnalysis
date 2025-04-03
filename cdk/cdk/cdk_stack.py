@@ -7,10 +7,12 @@ from aws_cdk import (
     aws_cloudfront_origins as cloudfront_origins,
     aws_lambda as _lambda,
     aws_apigateway as apigateway,
-    Duration
+    Duration,
+    RemovalPolicy
     # aws_sqs as sqs,
 )
 import os
+from dotenv import load_dotenv
 from constructs import Construct
 
 class CdkStack(Stack):
@@ -18,20 +20,22 @@ class CdkStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        load_dotenv()
+
         # Frontend
         bucket = s3.Bucket(self, "MovieReviewSentimentAnalysisFrontend",
                            website_index_document="index.html",
                            bucket_name= os.getenv('FE_BUCKET_NAME'),
                            public_read_access=False,
-                           removal_policy=s3.RemovalPolicy.DESTROY,
+                           removal_policy=RemovalPolicy.DESTROY,
                            auto_delete_objects=True)
-        origin_access_id = cloudfront.OriginAccessIdentity(self, "MovieReviewSentimentAnalysisOriginAccessIdentity")
-        bucket.grant_read(origin_access_id)
+        #origin_access_id = cloudfront.OriginAccessIdentity(self, "MovieReviewSentimentAnalysisOriginAccessIdentity")
+        #bucket.grant_read(origin_access_id)
 
         distribution = cloudfront.Distribution(self, "MovieReviewSentimentAnalysisDistribution",
                                                default_root_object="index.html",
                                                default_behavior=cloudfront.BehaviorOptions(
-                                                   origin=cloudfront_origins.S3Origin(bucket, origin_access_identity=origin_access_id),
+                                                   origin=cloudfront_origins.S3StaticWebsiteOrigin(bucket),
                                                    viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS)
 
                                                )
