@@ -38,7 +38,7 @@ class CdkStack(Stack):
                                                    origin=cloudfront_origins.S3StaticWebsiteOrigin(bucket),
                                                    viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS),
                                                    allow_methods=cloudfront.AllowedMethods.ALLOW_ALL,
-                                                   geo_restriction=cloudfront.GeoRestriction.allow_list('US', 'CA', 'GB')
+                                                   geo_restriction=cloudfront.GeoRestriction.allowlist('US', 'CA', 'GB')
                                                )
         bucket.grant_read(distribution.grant_principal)
         
