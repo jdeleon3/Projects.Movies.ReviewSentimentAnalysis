@@ -39,8 +39,8 @@ class CdkStack(Stack):
 
         # Frontend
         bucket = s3.Bucket(self, "MovieReviewSentimentAnalysisFrontend",
-                           website_index_document="index.html",
-                           website_error_document ="index.html",
+                           #website_index_document="index.html",
+                           #website_error_document ="index.html",
                            bucket_name= os.getenv('FE_BUCKET_NAME'),
                            public_read_access=False,
                            removal_policy=RemovalPolicy.DESTROY,
