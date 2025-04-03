@@ -47,7 +47,7 @@ class CdkStack(Stack):
                            auto_delete_objects=True)
         oai = cloudfront.OriginAccessIdentity(self, "MovieReviewSentimentAnalysisOriginAccessIdentity")
         #bucket.grant_read(origin_access_id)
-        api_url = f'{api.rest_api_id}.execute-api.{Aws.REGION}.amazonaws.com/{api.deployment_stage.stage_name}'
+        
 
         distribution = cloudfront.Distribution(self, "MovieReviewSentimentAnalysisDistribution",
                                                default_root_object="index.html",
@@ -72,7 +72,7 @@ class CdkStack(Stack):
                                                    viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS),                                                   
                                                    geo_restriction=cloudfront.GeoRestriction.allowlist('US', 'CA', 'GB')
                                                )
-        distribution.add_behavior("/api/*", cloudfront_origins.HttpOrigin(api_url),  
+        distribution.add_behavior("/api/*", cloudfront_origins.HttpOrigin(os.getenv('API_GATEWAY_URL')),  
                                   allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
                                   cached_methods=cloudfront.CachedMethods.CACHE_GET_HEAD,
                                   viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS)
