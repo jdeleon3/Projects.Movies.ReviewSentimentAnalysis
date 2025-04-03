@@ -22,27 +22,6 @@ class CdkStack(Stack):
 
         load_dotenv()
 
-        # Frontend
-        bucket = s3.Bucket(self, "MovieReviewSentimentAnalysisFrontend",
-                           website_index_document="index.html",
-                           bucket_name= os.getenv('FE_BUCKET_NAME'),
-                           public_read_access=False,
-                           removal_policy=RemovalPolicy.DESTROY,
-                           auto_delete_objects=True)
-        oai = cloudfront.OriginAccessIdentity(self, "MovieReviewSentimentAnalysisOriginAccessIdentity")
-        #bucket.grant_read(origin_access_id)
-
-        distribution = cloudfront.Distribution(self, "MovieReviewSentimentAnalysisDistribution",
-                                               default_root_object="index.html",
-                                               default_behavior=cloudfront.BehaviorOptions(
-                                                   origin=cloudfront_origins.S3BucketOrigin.with_origin_access_identity(bucket, origin_access_identity=oai),
-                                                   allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
-                                                   viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS),                                                   
-                                                   geo_restriction=cloudfront.GeoRestriction.allowlist('US', 'CA', 'GB')
-                                               )
-        
-        
-
         # Backend 
         docker_lambda = _lambda.DockerImageFunction(self, "MovieReviewSentimentAnalysisLambda",
                                                     code=_lambda.DockerImageCode.from_image_asset(os.path.join('..', 'backend')),
@@ -55,6 +34,50 @@ class CdkStack(Stack):
                                        proxy=True,
                                        description="Movie Review Sentiment Analysis API"
                                        )
+
+        # Frontend
+        bucket = s3.Bucket(self, "MovieReviewSentimentAnalysisFrontend",
+                           website_index_document="index.html",
+                           website_error_document ="index.html",
+                           bucket_name= os.getenv('FE_BUCKET_NAME'),
+                           public_read_access=False,
+                           removal_policy=RemovalPolicy.DESTROY,
+                           auto_delete_objects=True)
+        oai = cloudfront.OriginAccessIdentity(self, "MovieReviewSentimentAnalysisOriginAccessIdentity")
+        #bucket.grant_read(origin_access_id)
+
+        distribution = cloudfront.Distribution(self, "MovieReviewSentimentAnalysisDistribution",
+                                               default_root_object="index.html",
+                                               error_responses=[
+                                                   cloudfront.ErrorResponse(
+                                                         http_status=403,
+                                                         response_http_status=200,
+                                                         response_page_path="/index.html",
+                                                         ttl=Duration.seconds(0)
+                                                    ),
+                                                    cloudfront.ErrorResponse(
+                                                         http_status=404,
+                                                         response_http_status=200,
+                                                         response_page_path="/index.html",
+                                                         ttl=Duration.seconds(0)
+                                                    )
+                                               ],
+                                               default_behavior=cloudfront.BehaviorOptions(
+                                                   origin=cloudfront_origins.S3BucketOrigin.with_origin_access_identity(bucket, origin_access_identity=oai),
+                                                   allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
+                                                   cached_methods=cloudfront.CachedMethods.CACHE_GET_HEAD,
+                                                   viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS),                                                   
+                                                   geo_restriction=cloudfront.GeoRestriction.allowlist('US', 'CA', 'GB')
+                                               )
+        
+        distribution.add_behavior("/api/*", cloudfront_origins.HttpOrigin(api.url[8:-1]), # Remove the https:// and trailing / 
+                                  allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
+                                  cached_methods=cloudfront.CachedMethods.CACHE_GET_HEAD,
+                                  viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS)
+        
+        bucket.grant_read(oai)
+
+
         
         self.api_url = api.url
         self.bucket_name = bucket.bucket_name
