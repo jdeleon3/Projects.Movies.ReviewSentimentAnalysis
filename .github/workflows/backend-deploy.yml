@@ -8,6 +8,14 @@ on:
             - 'backend/*'
             - 'backend/**'
             - '.github/workflows/backend-deploy.yml'
+            
+env:
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}  
+  AWS_DEFAULT_OUTPUT: json
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
     deploy:
