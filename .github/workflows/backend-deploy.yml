@@ -25,6 +25,11 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with: 
+                node-version: 20.x
+
             - name: Setup python 3.11
               uses: actions/setup-python@v4
               with:
@@ -35,9 +40,9 @@ jobs:
 
             - name: Instal cdk and Python dependencies
               run: |
-                pip install aws-cdk-lib constructs
                 cd cdk
-                pip install -r requirements.txt || true
+                npm install -g aws-cdk                
+                pip install -r requirements.txt
 
             - name: Setup AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
