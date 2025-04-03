@@ -8,6 +8,8 @@ on:
             - 'backend/*'
             - 'backend/**'
             - '.github/workflows/backend-deploy.yml'
+            - 'cdk/*'
+            - 'cdk/**'
 
 env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}  
