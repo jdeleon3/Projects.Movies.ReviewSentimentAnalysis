@@ -29,18 +29,18 @@ class CdkStack(Stack):
                            public_read_access=False,
                            removal_policy=RemovalPolicy.DESTROY,
                            auto_delete_objects=True)
-        #origin_access_id = cloudfront.OriginAccessIdentity(self, "MovieReviewSentimentAnalysisOriginAccessIdentity")
+        oai = cloudfront.OriginAccessIdentity(self, "MovieReviewSentimentAnalysisOriginAccessIdentity")
         #bucket.grant_read(origin_access_id)
 
         distribution = cloudfront.Distribution(self, "MovieReviewSentimentAnalysisDistribution",
                                                default_root_object="index.html",
                                                default_behavior=cloudfront.BehaviorOptions(
-                                                   origin=cloudfront_origins.S3StaticWebsiteOrigin(bucket),
+                                                   origin=cloudfront_origins.S3BucketOrigin.with_origin_access_identity(bucket, origin_access_identity=oai),
                                                    allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
                                                    viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS),                                                   
                                                    geo_restriction=cloudfront.GeoRestriction.allowlist('US', 'CA', 'GB')
                                                )
-        #bucket.grant_read(distribution.grant_principal)
+        
         
 
         # Backend 
