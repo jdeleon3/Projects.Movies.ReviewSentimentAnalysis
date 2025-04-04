@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.routing import APIRouter
 from mangum import Mangum
 import os
 from dotenv import load_dotenv
@@ -8,9 +8,14 @@ import uvicorn
 # Load environment variables from .env file
 load_dotenv()
 
+api_router = APIRouter()
+
+@api_router.get("/hello")
+def read_root():
+    return {"Hello": "World"}
 
 app = FastAPI()
-
+app.include_router(api_router, prefix='/api')  # Include your router here
 
 
 
@@ -28,9 +33,7 @@ app = FastAPI()
 #     allow_headers=["*"],
 # )
 
-@app.get("/hello")
-def read_root():
-    return {"Hello": "World"}
+
 
 
 # This is the entry point for the AWS Lambda function.
