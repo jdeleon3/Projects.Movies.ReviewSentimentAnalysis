@@ -77,7 +77,7 @@ class CdkStack(Stack):
                                             ,origin_path=os.getenv('API_GATEWAY_ORIGIN_PATH')),  
                                   allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
                                   cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
-
+                                  origin_request_policy=cloudfront.OriginRequestPolicy.ALL_VIEWER,
                                   viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS)
         
         bucket.grant_read(oai)
