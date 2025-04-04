@@ -74,7 +74,7 @@ class CdkStack(Stack):
                                                )
         distribution.add_behavior("/api/*", cloudfront_origins.HttpOrigin(os.getenv('API_GATEWAY_URL')),  
                                   allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
-                                  cached_methods=cloudfront.CachedMethods.CACHE_GET_HEAD,
+                                  cached_methods=cloudfront.CachedMethods.NONE,
                                   viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS)
         
         bucket.grant_read(oai)

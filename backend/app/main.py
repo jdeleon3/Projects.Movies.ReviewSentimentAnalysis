@@ -15,18 +15,18 @@ app = FastAPI()
 
 
 # Allow CORS for all origins (you can restrict this to specific origins if needed)
-allowed = os.getenv("ALLOWED_ORIGINS", "*")
-if allowed == "*":
-    allowed = ["*"]
-else:
-    allowed = [origin.strip() for origin in allowed.split(',')]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[allowed],
-    allow_credentials=True,
-    allow_methods=['get', 'post', 'options'],
-    allow_headers=["*"],
-)
+# allowed = os.getenv("ALLOWED_ORIGINS", "*")
+# if allowed == "*":
+#     allowed = ["*"]
+# else:
+#     allowed = [origin.strip() for origin in allowed.split(',')]
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[allowed],
+#     allow_credentials=True,
+#     allow_methods=['get', 'post', 'options'],
+#     allow_headers=["*"],
+# )
 
 @app.get("/hello")
 def read_root():
