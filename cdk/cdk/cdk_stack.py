@@ -72,9 +72,12 @@ class CdkStack(Stack):
                                                    viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS),                                                   
                                                    geo_restriction=cloudfront.GeoRestriction.allowlist('US', 'CA', 'GB')
                                                )
-        distribution.add_behavior("/api/*", cloudfront_origins.HttpOrigin(os.getenv('API_GATEWAY_URL')),  
+        distribution.add_behavior("/api/*", cloudfront_origins.HttpOrigin(
+                                            os.getenv('API_GATEWAY_URL')
+                                            ,origin_path=os.getenv('API_GATEWAY_ORIGIN_PATH')),  
                                   allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
-                                  #cached_methods=cloudfront.CachedMethods.CACHE_NONE,
+                                  cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
+
                                   viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS)
         
         bucket.grant_read(oai)
