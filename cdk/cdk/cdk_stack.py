@@ -33,7 +33,8 @@ class CdkStack(Stack):
         # API Gateway
         api = apigateway.LambdaRestApi(self, "MovieReviewSentimentAnalysisAPI",
                                        handler=docker_lambda,
-                                       proxy=True,
+                                       proxy=True, 
+                                       endpoint_types= [apigateway.EndpointType.REGIONAL],
                                        description="Movie Review Sentiment Analysis API"
                                        )
 
