@@ -15,6 +15,7 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}  
   AWS_DEFAULT_OUTPUT: json
   API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
+  API_GATEWAY_ORIGIN_PATH: ${{ secrets.API_GATEWAY_ORIGIN_PATH }}
 
 permissions:
   id-token: write
