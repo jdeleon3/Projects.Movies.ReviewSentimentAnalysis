@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
-from models.Movie import Movie
-from models.Review import Review
+from app.models.Movie import Movie
+from app.models.Review import Review
 
 class MovieSearch:
     def __init__(self):        

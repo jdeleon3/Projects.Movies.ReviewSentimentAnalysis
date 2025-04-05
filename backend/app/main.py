@@ -5,11 +5,11 @@ from mangum import Mangum
 from dotenv import load_dotenv
 import uvicorn
 
-from models.Movie import Movie
-from models.Review import Review
-from models.ReviewsRequest import ReviewsRequest
+from app.models.Movie import Movie
+from app.models.Review import Review
+from app.models.ReviewsRequest import ReviewsRequest
 
-from services.MovieSearch import MovieSearch
+from app.services.MovieSearch import MovieSearch
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 # Load environment variables from .env file
