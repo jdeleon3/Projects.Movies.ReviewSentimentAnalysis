@@ -2,7 +2,6 @@ from typing import List
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
 from mangum import Mangum
-import os
 from dotenv import load_dotenv
 import uvicorn
 
@@ -15,8 +14,6 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 # Load environment variables from .env file
 load_dotenv()
-
-
 
 api_router = APIRouter()
 
