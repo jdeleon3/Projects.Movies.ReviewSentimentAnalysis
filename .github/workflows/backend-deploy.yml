@@ -12,10 +12,10 @@ on:
             - 'cdk/**'
 
 env:
-  AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}  
+  AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}  
   AWS_DEFAULT_OUTPUT: json
-  API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
-  API_GATEWAY_ORIGIN_PATH: ${{ secrets.API_GATEWAY_ORIGIN_PATH }}
+  API_GATEWAY_URL: ${{ vars.API_GATEWAY_URL }}
+  API_GATEWAY_ORIGIN_PATH: ${{ vars.API_GATEWAY_ORIGIN_PATH }}
 
 permissions:
   id-token: write
@@ -51,7 +51,7 @@ jobs:
             - name: Setup AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
-                aws-region: ${{ secrets.AWS_REGION }}
+                aws-region: ${{ vars.AWS_REGION }}
                 role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
                 role-duration-seconds: 1200
                 role-session-name: github-actions
@@ -62,6 +62,6 @@ jobs:
                 cdk deploy --require-approval never
               env:
                 CDK_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
-                CDK_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-                FE_BUCKET_NAME: ${{ secrets.FE_BUCKET_NAME }}
+                CDK_DEFAULT_REGION: ${{ vars.AWS_REGION }}
+                FE_BUCKET_NAME: ${{ vars.FE_BUCKET_NAME }}
 

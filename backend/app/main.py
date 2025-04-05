@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
 from mangum import Mangum
@@ -5,8 +6,17 @@ import os
 from dotenv import load_dotenv
 import uvicorn
 
+from models.Movie import Movie
+from models.Review import Review
+from models.ReviewsRequest import ReviewsRequest
+
+from services.MovieSearch import MovieSearch
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 # Load environment variables from .env file
 load_dotenv()
+
+
 
 api_router = APIRouter()
 
@@ -14,27 +24,22 @@ api_router = APIRouter()
 def read_root():
     return {"Hello": "World"}
 
+@api_router.get("/movie", response_model=List[Movie])
+def get_movie(q: str):
+    search = MovieSearch()
+    results = search.search(q)
+    print(results)
+    return JSONResponse(content=jsonable_encoder(results))
+
+@api_router.post("/reviews", response_model=List[Review])
+def get_reviews(request: ReviewsRequest):
+    search = MovieSearch()
+    reviews = search.get_reviews(request.url)
+    return JSONResponse(content=jsonable_encoder(reviews))
+
+
 app = FastAPI()
 app.include_router(api_router, prefix='/api')  # Include your router here
-
-
-
-# Allow CORS for all origins (you can restrict this to specific origins if needed)
-# allowed = os.getenv("ALLOWED_ORIGINS", "*")
-# if allowed == "*":
-#     allowed = ["*"]
-# else:
-#     allowed = [origin.strip() for origin in allowed.split(',')]
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=[allowed],
-#     allow_credentials=True,
-#     allow_methods=['get', 'post', 'options'],
-#     allow_headers=["*"],
-# )
-
-
-
 
 # This is the entry point for the AWS Lambda function.
 handler = Mangum(app)

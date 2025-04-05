@@ -37,7 +37,7 @@ jobs:
             - name: Setup AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
-                aws-region: ${{ secrets.AWS_REGION }}
+                aws-region: ${{ vars.AWS_REGION }}
                 role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
                 role-duration-seconds: 1200
                 role-session-name: github-actions
@@ -45,4 +45,4 @@ jobs:
             - name: Sync to S3
               run: |
                 cd frontend
-                aws s3 sync ./dist s3://${{ secrets.FE_BUCKET_NAME }} --delete --region ${{ secrets.AWS_REGION }}
+                aws s3 sync ./dist s3://${{ vars.FE_BUCKET_NAME }} --delete --region ${{ vars.AWS_REGION }}

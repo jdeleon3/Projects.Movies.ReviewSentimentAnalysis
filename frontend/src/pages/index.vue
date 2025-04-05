@@ -1,5 +1,6 @@
 <template>
-  <HelloWorld />
+  <Search />  
+  <SearchResults />
 </template>
 
 <script setup>
