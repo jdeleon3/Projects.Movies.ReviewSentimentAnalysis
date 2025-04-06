@@ -42,20 +42,31 @@ export const useMoviesStore = defineStore('movies', () => {
 
     async function fetchMovieReviews(movie) {
         try {
-            const response = await fetch(`api/reviews`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 'url': movie.url })
-            });
-            const data = await response.json();
-            if (!response.ok) {                
-                movieReviews.value = [];
-            } else {
+            if(selectedMovie.value == '') {
+                const response = await fetch(`api/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'url': movie.url })
+                });
+                const data = await response.json();
+                if (!response.ok) {                
+                    movieReviews.value = [];
+                }  else if(data.length == 0){
+                    movieReviews.value = [];
+                    searchErrorMessage.value = 'No reviews found for this movie.';
+                } else {                    
+                    movieReviews.value = data;
+                }
                 selectedMovie.value = movie;
-                movieReviews.value = data;
             }
+            else{
+                
+                selectedMovie.value = '';
+                movieReviews.value = [];                
+            }
+            
         } catch (error) {
             console.error('Error fetching movie reviews:', error);
             movieReviews.value = [];

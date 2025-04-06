@@ -1,5 +1,12 @@
 <template>
-  <v-app>
+  <div class="bg-black min-h-screen flex flex-col ">
+    <AppNav />
+    <main class="flex-grow w-[80%] lg:w-[50%] mx-auto">
+      <router-view />
+    </main>
+    <AppFooter />
+  </div>
+  <!-- <v-app>
       <v-app-bar class="bg-primary">
         <v-toolbar-title>Movie Review Analyzer</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -26,9 +33,12 @@
         </v-row>
       </v-container>
     </v-footer>
-  </v-app>
+  </v-app> -->
 </template>
 
 <script setup>
+import AppFooter from './components/AppFooter.vue';
+import AppNav from './components/AppNav.vue';
+
   //
 </script>

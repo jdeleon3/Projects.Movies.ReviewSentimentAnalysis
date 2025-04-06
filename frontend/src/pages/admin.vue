@@ -3,7 +3,15 @@
 </script>
 
 <template>
-  <v-container fluid class="pa-0">
+  <div >
+    <h1>Admin Panel</h1>
+    <div>
+      <div>        
+        <p>Welcome to the admin panel. Here you can manage your application.</p>        
+      </div>
+    </div>
+  </div>
+  <!-- <v-container fluid class="pa-0">
     <v-row justify="center" align="center" class="min-h-screen">
       <v-col cols="12" md="8" lg="6">
         <v-card class="elevation-26 pa-4" color="black">
@@ -17,5 +25,5 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </v-container> -->
 </template>
